@@ -1,0 +1,43 @@
+<section class="container my-3">
+  <div class="display-3">Products</div>
+  <div class="main-content mt-3">
+    <mat-chip-list aria-label="Fish selection">
+      <mat-chip selected>Available</mat-chip>
+      <mat-chip>Deleted</mat-chip>
+    </mat-chip-list>
+
+    <div class="d-flex align-items-center justify-content-between mt-3">
+      <div class="product-result">
+        1-24 of over 100 results for "Available"
+      </div>
+
+      <div class="col-auto">
+        <mat-form-field appearance="fill">
+          <mat-label>Select an option</mat-label>
+          <mat-select>
+            <mat-option [value]="'newest'">Newest</mat-option>
+            <mat-option [value]="'oldest'">Oldest</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="product-card--wrapper">
+      <app-product-card></app-product-card>
+      <app-product-card></app-product-card>
+      <app-product-card></app-product-card>
+      <app-product-card></app-product-card>
+      <app-product-card></app-product-card>
+    </div>
+
+    <div class="paginate">
+      <mat-paginator
+        [length]="100"
+        [pageSize]="24"
+        [pageSizeOptions]="[24, 48, 100]"
+        aria-label="Select page"
+      >
+      </mat-paginator>
+    </div>
+  </div>
+</section>
