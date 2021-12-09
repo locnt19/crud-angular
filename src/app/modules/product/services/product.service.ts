@@ -75,4 +75,17 @@ export class ProductService {
         tap(() => this._loadingService.setLoading(false))
       );
   }
+
+  createProduct(product: IProduct): Observable<IProduct> {
+    this._loadingService.setLoading(true);
+
+    return this._http.post<IProduct>(this._endpoint.products, product).pipe(
+      catchError(() => this._catchError()),
+      delay(1500),
+      tap(() => {
+        this._loadingService.setLoading(false);
+        this._notificationService.showSuccess('Create product successful');
+      })
+    );
+  }
 }

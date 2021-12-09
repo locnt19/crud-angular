@@ -89,11 +89,21 @@ export class ProductsComponent implements OnInit, OnDestroy {
     return cta;
   }
 
-  private _getProducts(option?: IProductRepositoryOptions) {
+  private _getProducts(option: IProductRepositoryOptions) {
     this._subscription$.add(
       this._productService.getProducts(option).subscribe(res => {
         this.totalProductCount = res.total;
         this.products = res.data;
+      })
+    );
+  }
+
+  private _createProduct(product: IProduct): void {
+    this._subscription$.add(
+      this._productService.createProduct(product).subscribe(res => {
+        this._resetProducts();
+
+        this._getProducts(this.repositoryOption);
       })
     );
   }
@@ -107,7 +117,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
       width: '500px',
       disableClose: true,
       data: {
-        title: 'Add new product',
+        title: 'Create product',
         action: EProductActions.create,
         actionLabel: 'Create'
       }
@@ -115,7 +125,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
     this._subscription$.add(
       dialogRef.afterClosed().subscribe((data?: IProduct) => {
-        console.log('Dialog output:', data);
+        if (data) {
+          this._createProduct(data);
+        }
       })
     );
   }
@@ -165,6 +177,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         .subscribe((value: TProductStatus) => {
           this.repositoryOption.status = value;
           this._resetProducts();
+
           this._getProducts(this.repositoryOption);
         })
     );
@@ -180,6 +193,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
           this.repositoryOption.q = value;
           this._resetProducts();
+
           this._getProducts(this.repositoryOption);
         })
     );

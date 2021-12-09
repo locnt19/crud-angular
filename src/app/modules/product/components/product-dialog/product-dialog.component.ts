@@ -27,18 +27,21 @@ export class ProductDialogComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {}
 
   private _initForm(): FormGroup {
+    const timeElapsed = Date.now();
+    const today = new Date(timeElapsed);
+
     return this._formBuilder.group({
       id: [''],
-      name: ['name', Validators.required],
-      description: ['desc', Validators.required],
-      price: ['123', Validators.required],
+      name: ['', Validators.required],
+      description: ['', Validators.required],
+      price: ['', Validators.required],
       imageUrl: [
         'https://source.unsplash.com/1600x900/?product',
         Validators.required
       ],
-      quantity: ['123', Validators.required],
-      status: [{ value: 'AVAILABLE', disabled: this._isCreateAction() }],
-      createdAt: [this._isCreateAction() ? Date.now() : '']
+      quantity: ['', Validators.required],
+      status: ['AVAILABLE'],
+      createdAt: [this._isCreateAction() ? today.toISOString() : '']
     });
   }
 
