@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
 import { catchError, delay, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { IProduct } from '../models/product.interface';
 import { Observable, throwError } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { IRepository } from 'src/app/models/repository.interface';
 import {
-  IRepository,
-  IRepositoryOptions
-} from 'src/app/models/repository.interface';
+  IProduct,
+  IProductRepositoryOptions
+} from '../models/product.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +32,9 @@ export class ProductService {
     return throwError(new Error('INTERNAL SERVER ERROR'));
   }
 
-  getProducts(option?: IRepositoryOptions): Observable<IRepository<IProduct>> {
+  getProducts(
+    option?: IProductRepositoryOptions
+  ): Observable<IRepository<IProduct>> {
     this._loadingService.setLoading(true);
     let httpParams = new HttpParams();
 

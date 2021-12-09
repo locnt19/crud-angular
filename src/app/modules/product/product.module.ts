@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
-import { MatChipsModule } from '@angular/material/chips';
+import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 
 import { ProductRoutingModule } from './product-routing.module';
 import { ProductsComponent } from './pages/products/products.component';
@@ -23,13 +26,16 @@ import { ProductCardComponent } from './components/product-card/product-card.com
   imports: [
     CommonModule,
     ProductRoutingModule,
-    MatChipsModule,
+    ReactiveFormsModule,
+    MatRadioModule,
     MatSelectModule,
     MatCardModule,
     MatProgressBarModule,
     MatDividerModule,
     MatButtonModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatIconModule,
+    MatInputModule
   ]
 })
 export class ProductModule {}
