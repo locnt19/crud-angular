@@ -8,7 +8,7 @@
 
     <div class="d-flex align-items-center justify-content-between mt-3">
       <div class="product-result">
-        1-24 of over 100 results for "Available"
+        1-24 of over {{ products.length }} results for "Available"
       </div>
 
       <div class="col-auto">
@@ -23,18 +23,16 @@
     </div>
 
     <div class="product-card--wrapper">
-      <app-product-card></app-product-card>
-      <app-product-card></app-product-card>
-      <app-product-card></app-product-card>
-      <app-product-card></app-product-card>
-      <app-product-card></app-product-card>
+      <ng-container *ngFor="let product of products">
+        <app-product-card [product]="product"></app-product-card>
+      </ng-container>
     </div>
 
     <div class="paginate">
       <mat-paginator
-        [length]="100"
-        [pageSize]="24"
-        [pageSizeOptions]="[24, 48, 100]"
+        [length]="products.length"
+        [pageSize]="12"
+        [pageSizeOptions]="[12, 24, 48, 100]"
         aria-label="Select page"
       >
       </mat-paginator>
