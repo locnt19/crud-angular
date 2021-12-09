@@ -1,5 +1,16 @@
 <section class="container my-3">
-  <div class="display-3">Products</div>
+  <div class="display-3 d-flex align-items-center">
+    <span>Products</span>
+    <button
+      mat-flat-button
+      color="primary"
+      isRoundButton="true"
+      (click)="ctaAddProduct()"
+      class="ms-3"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
   <div class="main-content mt-3">
     <form
       [formGroup]="productForm"

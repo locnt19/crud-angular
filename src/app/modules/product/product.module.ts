@@ -11,17 +11,20 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { ProductRoutingModule } from './product-routing.module';
 import { ProductsComponent } from './pages/products/products.component';
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
+import { ProductDialogComponent } from './components/product-dialog/product-dialog.component';
 
 @NgModule({
   declarations: [
     ProductsComponent,
     ProductDetailComponent,
-    ProductCardComponent
+    ProductCardComponent,
+    ProductDialogComponent
   ],
   imports: [
     CommonModule,
@@ -35,7 +38,8 @@ import { ProductCardComponent } from './components/product-card/product-card.com
     MatButtonModule,
     MatPaginatorModule,
     MatIconModule,
-    MatInputModule
+    MatInputModule,
+    MatDialogModule
   ]
 })
 export class ProductModule {}

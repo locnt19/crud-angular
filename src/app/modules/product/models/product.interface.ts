@@ -24,6 +24,18 @@ export interface IProduct extends IProductBase {
 
 export type TProductStatus = 'AVAILABLE' | 'DELETED';
 
+export interface IProductDialog {
+  title: string;
+  action: EProductActions;
+  actionLabel: string;
+}
+
+export enum EProductActions {
+  create,
+  update,
+  delete
+}
+
 export enum ECardCTA {
   view_detail,
   update,

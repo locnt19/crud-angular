@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content [formGroup]="productForm">
+  <mat-form-field class="w-100" appearance="fill">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" />
+  </mat-form-field>
+  <mat-form-field class="w-100" appearance="fill">
+    <mat-label>Description</mat-label>
+    <textarea matInput formControlName="description"></textarea>
+  </mat-form-field>
+  <mat-form-field class="w-100" appearance="fill">
+    <mat-label>Price</mat-label>
+    <input matInput formControlName="price" />
+  </mat-form-field>
+  <mat-form-field class="w-100" appearance="fill">
+    <mat-label>Image</mat-label>
+    <input matInput formControlName="imageUrl" />
+  </mat-form-field>
+  <mat-form-field class="w-100" appearance="fill">
+    <mat-label>Quantity</mat-label>
+    <input matInput formControlName="quantity" />
+  </mat-form-field>
+  <mat-form-field class="w-100" appearance="fill">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="status">
+      <mat-option value="AVAILABLE">Available</mat-option>
+      <mat-option value="DELETED">Deleted</mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    color="primary"
+    [disabled]="!productForm.valid"
+    (click)="save()"
+    mat-raised-button
+  >
+    {{ data.actionLabel }}
+  </button>
+</mat-dialog-actions>

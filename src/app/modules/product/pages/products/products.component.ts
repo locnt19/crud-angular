@@ -5,8 +5,11 @@ import { environment } from 'src/environments/environment';
 import { PageEvent } from '@angular/material/paginator';
 import { debounceTime } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ProductDialogComponent } from '../../components/product-dialog/product-dialog.component';
 import {
   ECardCTA,
+  EProductActions,
   IProduct,
   IProductCTA,
   IProductRepositoryOptions,
@@ -22,6 +25,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private _subscription$: Subscription;
   private _paginator$: Subject<PageEvent>;
   private _debounceTime: number;
+  private _ctaAddProduct$: Subject<void>;
   products: IProduct[];
   productForm: FormGroup;
   productCTA: IProductCTA[];
@@ -30,11 +34,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   constructor(
     private _formBuilder: FormBuilder,
-    private _productService: ProductService
+    private _productService: ProductService,
+    private _matDialog: MatDialog
   ) {
     this._subscription$ = new Subscription();
     this._paginator$ = new Subject();
-    this._debounceTime = 350;
+    this._debounceTime = 300;
+    this._ctaAddProduct$ = new Subject();
     this.productCTA = this._setProductCTA();
     this.productForm = this._initForm();
     this.repositoryOption = {
@@ -42,6 +48,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
       _limit: environment.paginate.limit
     };
     this._listenPaginatorChange();
+    this._listenCtaAddProduct();
     this._listenFormControlCreatedAtChange();
     this._listenFormControlStatusChange();
     this._listenFormControlSearchChange();
@@ -95,6 +102,24 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.products = [];
   }
 
+  private _openDialog() {
+    const dialogRef = this._matDialog.open(ProductDialogComponent, {
+      width: '500px',
+      disableClose: true,
+      data: {
+        title: 'Add new product',
+        action: EProductActions.create,
+        actionLabel: 'Create'
+      }
+    });
+
+    this._subscription$.add(
+      dialogRef.afterClosed().subscribe((data?: IProduct) => {
+        console.log('Dialog output:', data);
+      })
+    );
+  }
+
   private _listenPaginatorChange(): void {
     this._subscription$.add(
       this._paginator$
@@ -106,6 +131,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
           this._getProducts(this.repositoryOption);
         })
+    );
+  }
+
+  private _listenCtaAddProduct(): void {
+    this._subscription$.add(
+      this._ctaAddProduct$
+        .pipe(debounceTime(this._debounceTime))
+        .subscribe(() => this._openDialog())
     );
   }
 
@@ -154,5 +187,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   paginatorChange(event: PageEvent): void {
     this._paginator$.next(event);
+  }
+
+  ctaAddProduct(): void {
+    this._ctaAddProduct$.next();
   }
 }
