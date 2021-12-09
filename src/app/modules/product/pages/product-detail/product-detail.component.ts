@@ -1,8 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { IProduct } from '../../models/product.interface';
 import { ProductService } from '../../services/product.service';
+import {
+  ECardCTA,
+  IProduct,
+  IProductCTA
+} from '../../models/product.interface';
 
 @Component({
   selector: 'app-product-detail',
@@ -10,13 +14,26 @@ import { ProductService } from '../../services/product.service';
   styleUrls: ['./product-detail.component.scss']
 })
 export class ProductDetailComponent implements OnInit, OnDestroy {
-  private _subscription$ = new Subscription();
+  private _subscription$: Subscription;
   product: IProduct;
+  productCTA: IProductCTA[];
 
   constructor(
     private _activatedRoute: ActivatedRoute,
     private _productService: ProductService
-  ) {}
+  ) {
+    this._subscription$ = new Subscription();
+    this.productCTA = [
+      {
+        label: 'Update',
+        value: ECardCTA.update
+      },
+      {
+        label: 'Delete',
+        value: ECardCTA.delete
+      }
+    ];
+  }
 
   ngOnInit(): void {
     this._getProductIdFromURL();

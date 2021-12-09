@@ -10,3 +10,14 @@ export interface IProduct {
 }
 
 export type IProductStatus = 'AVAILABLE' | 'DELETED';
+
+export enum ECardCTA {
+  view_detail,
+  update,
+  delete
+}
+
+export interface IProductCTA {
+  label: string;
+  value: ECardCTA;
+}
