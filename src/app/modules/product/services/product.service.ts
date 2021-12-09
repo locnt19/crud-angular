@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { catchError, delay, tap } from 'rxjs/operators';
+import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { catchError, delay, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { IProduct } from '../models/product.interface';
 import { Observable, throwError } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import {
+  IRepository,
+  IRepositoryOptions
+} from 'src/app/models/repository.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -28,14 +32,34 @@ export class ProductService {
     return throwError(new Error('INTERNAL SERVER ERROR'));
   }
 
-  getProducts(options?): Observable<IProduct[]> {
+  getProducts(option?: IRepositoryOptions): Observable<IRepository<IProduct>> {
     this._loadingService.setLoading(true);
+    let httpParams = new HttpParams();
 
-    return this._http.get<IProduct[]>(this._endpoint.products).pipe(
-      catchError(() => this._catchError()),
-      delay(1500),
-      tap(() => this._loadingService.setLoading(false))
-    );
+    if (option) {
+      for (const key in option) {
+        if (Object.prototype.hasOwnProperty.call(option, key)) {
+          httpParams = httpParams.set(key, option[key]);
+        }
+      }
+    }
+
+    return this._http
+      .get<IProduct[]>(this._endpoint.products, {
+        params: httpParams,
+        observe: 'response'
+      })
+      .pipe(
+        catchError(() => this._catchError()),
+        map((res: HttpResponse<IProduct[]>) => {
+          return {
+            total: parseInt(res.headers.get('X-Total-Count') ?? '0'),
+            data: res.body ?? []
+          };
+        }),
+        delay(1500),
+        tap(() => this._loadingService.setLoading(false))
+      );
   }
 
   getProduct(id: string): Observable<IProduct> {

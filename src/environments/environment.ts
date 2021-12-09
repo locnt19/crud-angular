@@ -7,5 +7,9 @@ export const environment = {
   endpoint: {
     products: 'http://localhost:3000/products',
     product: 'http://localhost:3000/products/{product_id}'
+  },
+  paginate: {
+    page: 1,
+    limit: 8
   }
 };
