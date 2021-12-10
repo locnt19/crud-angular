@@ -14,6 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 
 import { ProductRoutingModule } from './product-routing.module';
+import { ProductService } from './services/product.service';
+import { ProductCardService } from './services/product-card.service';
 import { ProductsComponent } from './pages/products/products.component';
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
@@ -42,6 +44,7 @@ import { ProductDialogDeleteComponent } from './components/product-dialog-delete
     MatIconModule,
     MatInputModule,
     MatDialogModule
-  ]
+  ],
+  providers: [ProductService, ProductCardService]
 })
 export class ProductModule {}

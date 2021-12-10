@@ -6,9 +6,10 @@ import { Observable, throwError } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { IRepository } from 'src/app/models/repository.interface';
+import * as _ from 'lodash';
 import {
   IProduct,
-  IProductRepositoryOptions
+  IProductRepositoryOption
 } from '../models/product.interface';
 
 @Injectable({
@@ -33,18 +34,12 @@ export class ProductService {
   }
 
   getProducts(
-    option?: IProductRepositoryOptions
+    option: IProductRepositoryOption
   ): Observable<IRepository<IProduct>> {
     this._loadingService.setLoading(true);
-    let httpParams = new HttpParams();
 
-    if (option) {
-      for (const key in option) {
-        if (Object.prototype.hasOwnProperty.call(option, key) && option[key]) {
-          httpParams = httpParams.set(key, option[key]);
-        }
-      }
-    }
+    const optionOmitted = _.omitBy(option, _.isNil);
+    const httpParams = new HttpParams({ fromObject: optionOmitted });
 
     return this._http
       .get<IProduct[]>(this._endpoint.products, {

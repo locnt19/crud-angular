@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as _ from 'lodash';
 import {
-  EProductActions,
+  EProductAction,
   IProduct,
   IProductDialog
 } from '../../models/product.interface';
@@ -59,11 +59,11 @@ export class ProductDialogComponent implements OnInit, OnDestroy {
   }
 
   private _isActionCreate(): boolean {
-    return this.data.action === EProductActions.create;
+    return this.data.action === EProductAction.create;
   }
 
   private _isActionUpdate(): boolean {
-    return this.data.product && this.data.action === EProductActions.update;
+    return this.data.product && this.data.action === EProductAction.update;
   }
 
   private _listenFormChangeIfActionUpdate() {

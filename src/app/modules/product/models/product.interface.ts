@@ -1,4 +1,4 @@
-import { IRepositoryOptions } from 'src/app/models/repository.interface';
+import { IRepositoryOption } from 'src/app/models/repository.interface';
 
 interface IProductBase {
   id?: number;
@@ -26,27 +26,23 @@ export type TProductStatus = 'AVAILABLE' | 'DELETED';
 
 export interface IProductDialog {
   title: string;
-  action: EProductActions;
+  action: EProductAction;
   actionLabel: string;
   product?: IProduct;
 }
 
-export enum EProductActions {
-  create,
-  update
-}
-
-export enum ECardCTA {
+export enum EProductAction {
   view_detail,
+  create,
   update,
   delete
 }
 
-export interface IProductCTA {
+export interface IProductCardAction {
   label: string;
-  value: ECardCTA;
+  value: EProductAction;
 }
 
-export interface IProductRepositoryOptions
-  extends IRepositoryOptions,
+export interface IProductRepositoryOption
+  extends IRepositoryOption,
     IProductBase {}

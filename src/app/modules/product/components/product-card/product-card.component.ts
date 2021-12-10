@@ -3,10 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import {
-  ECardCTA,
-  EProductActions,
+  EProductAction,
   IProduct,
-  IProductCTA
+  IProductCardAction
 } from '../../models/product.interface';
 import { ProductCardService } from '../../services/product-card.service';
 import { ProductService } from '../../services/product.service';
@@ -20,9 +19,9 @@ import { ProductDialogComponent } from '../product-dialog/product-dialog.compone
 })
 export class ProductCardComponent implements OnInit, OnDestroy {
   @Input() product: IProduct;
-  @Input() ctaList: IProductCTA[];
+  @Input() actions: IProductCardAction[];
   private _subscription$: Subscription;
-  private _ctaCard$: Subject<ECardCTA>;
+  private _actions$: Subject<EProductAction>;
   private _debounceTime: number;
 
   constructor(
@@ -31,9 +30,8 @@ export class ProductCardComponent implements OnInit, OnDestroy {
     private _productService: ProductService
   ) {
     this._subscription$ = new Subscription();
-    this._ctaCard$ = new Subject();
+    this._actions$ = new Subject();
     this._debounceTime = 300;
-
     this._listenCtaCard();
   }
 
@@ -45,15 +43,15 @@ export class ProductCardComponent implements OnInit, OnDestroy {
 
   private _listenCtaCard(): void {
     this._subscription$.add(
-      this._ctaCard$
+      this._actions$
         .pipe(debounceTime(this._debounceTime))
         .subscribe(action => {
-          if (action === ECardCTA.update) {
+          if (action === EProductAction.update) {
             this._openDialogUpdate();
             return;
           }
 
-          if (action === ECardCTA.delete) {
+          if (action === EProductAction.delete) {
             this._openDialogDelete();
             return;
           }
@@ -67,7 +65,7 @@ export class ProductCardComponent implements OnInit, OnDestroy {
       disableClose: true,
       data: {
         title: 'Update product',
-        action: EProductActions.update,
+        action: EProductAction.update,
         actionLabel: 'Update',
         product: this.product
       }
@@ -112,14 +110,14 @@ export class ProductCardComponent implements OnInit, OnDestroy {
     );
   }
 
-  callToAction(action: ECardCTA): void {
-    if (action === ECardCTA.view_detail) {
+  callToAction(action: EProductAction): void {
+    if (action === EProductAction.view_detail) {
       this._productCardService.navigateProductDetail(
         this.product.id.toString()
       );
       return;
     }
 
-    this._ctaCard$.next(action);
+    this._actions$.next(action);
   }
 }

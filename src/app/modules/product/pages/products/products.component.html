@@ -11,6 +11,7 @@
       <mat-icon>add</mat-icon>
     </button>
   </div>
+
   <div class="main-content mt-3">
     <form
       [formGroup]="productForm"
@@ -49,7 +50,7 @@
       <ng-container *ngFor="let product of products">
         <app-product-card
           [product]="product"
-          [ctaList]="productCTA"
+          [actions]="productCardActions"
         ></app-product-card>
       </ng-container>
     </div>

@@ -12,10 +12,10 @@
   <mat-card-content>
     <p>{{ product.description }}</p>
   </mat-card-content>
-  <mat-card-actions *ngIf="ctaList && ctaList.length">
-    <ng-container *ngFor="let cta of ctaList">
-      <button mat-button (click)="callToAction(cta.value)">
-        {{ cta.label }}
+  <mat-card-actions *ngIf="actions?.length">
+    <ng-container *ngFor="let action of actions">
+      <button mat-button (click)="callToAction(action.value)">
+        {{ action.label }}
       </button>
     </ng-container>
   </mat-card-actions>

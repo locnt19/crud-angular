@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 export class ProductCardService {
   constructor(private _router: Router) {}
 
-  navigateProductDetail(id: string) {
+  navigateProductDetail(id: string): void {
     this._router.navigateByUrl(
       environment.route.productDetail.replace(':id', id)
     );

@@ -3,7 +3,7 @@ export interface IRepository<T> {
   total: number;
 }
 
-export interface IRepositoryOptions {
+export interface IRepositoryOption {
   _page?: number;
   _limit?: number;
   _sort?: string;

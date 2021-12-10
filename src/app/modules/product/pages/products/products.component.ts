@@ -8,11 +8,10 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductDialogComponent } from '../../components/product-dialog/product-dialog.component';
 import {
-  ECardCTA,
-  EProductActions,
+  EProductAction,
   IProduct,
-  IProductCTA,
-  IProductRepositoryOptions,
+  IProductCardAction,
+  IProductRepositoryOption,
   TProductStatus
 } from '../../models/product.interface';
 
@@ -28,9 +27,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private _ctaAddProduct$: Subject<void>;
   products: IProduct[];
   productForm: FormGroup;
-  productCTA: IProductCTA[];
+  productCardActions: IProductCardAction[];
   totalProductCount: number;
-  repositoryOption: IProductRepositoryOptions;
+  repositoryOption: IProductRepositoryOption;
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -41,7 +40,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this._paginator$ = new Subject();
     this._debounceTime = 300;
     this._ctaAddProduct$ = new Subject();
-    this.productCTA = this._setProductCTA();
+    this.productCardActions = this._setProductCTA();
     this.productForm = this._initForm();
     this.repositoryOption = {
       _page: environment.paginate.page,
@@ -70,26 +69,26 @@ export class ProductsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _setProductCTA(): IProductCTA[] {
+  private _setProductCTA(): IProductCardAction[] {
     const cta = [
       {
         label: 'View',
-        value: ECardCTA.view_detail
+        value: EProductAction.view_detail
       },
       {
         label: 'Update',
-        value: ECardCTA.update
+        value: EProductAction.update
       },
       {
         label: 'Delete',
-        value: ECardCTA.delete
+        value: EProductAction.delete
       }
     ];
 
     return cta;
   }
 
-  private _getProducts(option: IProductRepositoryOptions) {
+  private _getProducts(option: IProductRepositoryOption): void {
     this._subscription$.add(
       this._productService.getProducts(option).subscribe(res => {
         this.totalProductCount = res.total;
@@ -101,9 +100,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private _createProduct(product: IProduct): void {
     this._subscription$.add(
       this._productService.createProduct(product).subscribe(res => {
-        this._resetProducts();
-
-        this._getProducts(this.repositoryOption);
+        this._resetAndGetProducts(this.repositoryOption);
       })
     );
   }
@@ -112,13 +109,18 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.products = [];
   }
 
-  private _openDialog() {
+  private _resetAndGetProducts(option: IProductRepositoryOption): void {
+    this._resetProducts();
+    this._getProducts(option);
+  }
+
+  private _openDialog(): void {
     const dialogRef = this._matDialog.open(ProductDialogComponent, {
       width: '500px',
       disableClose: true,
       data: {
         title: 'Create product',
-        action: EProductActions.create,
+        action: EProductAction.create,
         actionLabel: 'Create'
       }
     });
@@ -139,9 +141,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         .subscribe(event => {
           this.repositoryOption._page = event.pageIndex + 1; // pageIndex start at 0
           this.repositoryOption._limit = event.pageSize;
-          this._resetProducts();
-
-          this._getProducts(this.repositoryOption);
+          this._resetAndGetProducts(this.repositoryOption);
         })
     );
   }
@@ -162,9 +162,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         .subscribe((value: string) => {
           this.repositoryOption._sort = 'createdAt';
           this.repositoryOption._order = value;
-          this._resetProducts();
-
-          this._getProducts(this.repositoryOption);
+          this._resetAndGetProducts(this.repositoryOption);
         })
     );
   }
@@ -176,9 +174,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
         .valueChanges.pipe(debounceTime(this._debounceTime))
         .subscribe((value?: TProductStatus) => {
           this.repositoryOption.status = value;
-          this._resetProducts();
-
-          this._getProducts(this.repositoryOption);
+          this._resetAndGetProducts(this.repositoryOption);
         })
     );
   }
@@ -192,9 +188,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
           if (!value.trim()) return;
 
           this.repositoryOption.q = value;
-          this._resetProducts();
-
-          this._getProducts(this.repositoryOption);
+          this._resetAndGetProducts(this.repositoryOption);
         })
     );
   }
