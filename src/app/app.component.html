@@ -1,5 +1,7 @@
 <mat-progress-bar
   *ngIf="loading$ | async"
   [mode]="'indeterminate'"
+  class="position-fixed top-0 start-0"
+  style="z-index: 2000"
 ></mat-progress-bar>
 <router-outlet></router-outlet>

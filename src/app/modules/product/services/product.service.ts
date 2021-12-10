@@ -88,4 +88,21 @@ export class ProductService {
       })
     );
   }
+
+  deleteProduct(id: string): Observable<IProduct> {
+    this._loadingService.setLoading(true);
+
+    return this._http
+      .patch<IProduct>(this._endpoint.product.replace('{product_id}', id), {
+        status: 'DELETED'
+      })
+      .pipe(
+        catchError(() => this._catchError()),
+        delay(1500),
+        tap(() => {
+          this._loadingService.setLoading(false);
+          this._notificationService.showSuccess('Delete product successful');
+        })
+      );
+  }
 }
