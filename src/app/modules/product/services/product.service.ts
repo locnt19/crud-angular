@@ -40,7 +40,7 @@ export class ProductService {
 
     if (option) {
       for (const key in option) {
-        if (Object.prototype.hasOwnProperty.call(option, key)) {
+        if (Object.prototype.hasOwnProperty.call(option, key) && option[key]) {
           httpParams = httpParams.set(key, option[key]);
         }
       }

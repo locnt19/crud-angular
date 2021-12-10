@@ -65,7 +65,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private _initForm(): FormGroup {
     return this._formBuilder.group({
       createdAt: [''],
-      status: [''],
+      status: [null],
       search: ['']
     });
   }
@@ -174,7 +174,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
       this.productForm
         .get('status')
         .valueChanges.pipe(debounceTime(this._debounceTime))
-        .subscribe((value: TProductStatus) => {
+        .subscribe((value?: TProductStatus) => {
           this.repositoryOption.status = value;
           this._resetProducts();
 
