@@ -6,7 +6,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { debounceTime } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ProductDialogComponent } from '../../components/product-dialog/product-dialog.component';
+import { ProductDialogCreateUpdateComponent } from '../../components/product-dialog-create-update/product-dialog-create-update.component';
+
 import {
   EProductAction,
   IProduct,
@@ -122,7 +123,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   private _openCreateDialog(): void {
-    const dialogRef = this._matDialog.open(ProductDialogComponent, {
+    const dialogRef = this._matDialog.open(ProductDialogCreateUpdateComponent, {
       width: '500px',
       disableClose: true,
       data: {

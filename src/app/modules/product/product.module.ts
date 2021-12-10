@@ -19,7 +19,7 @@ import { ProductCardService } from './services/product-card.service';
 import { ProductsComponent } from './pages/products/products.component';
 import { ProductDetailComponent } from './pages/product-detail/product-detail.component';
 import { ProductCardComponent } from './components/product-card/product-card.component';
-import { ProductDialogComponent } from './components/product-dialog/product-dialog.component';
+import { ProductDialogCreateUpdateComponent } from './components/product-dialog-create-update/product-dialog-create-update.component';
 import { ProductDialogDeleteComponent } from './components/product-dialog-delete/product-dialog-delete.component';
 
 @NgModule({
@@ -27,7 +27,7 @@ import { ProductDialogDeleteComponent } from './components/product-dialog-delete
     ProductsComponent,
     ProductDetailComponent,
     ProductCardComponent,
-    ProductDialogComponent,
+    ProductDialogCreateUpdateComponent,
     ProductDialogDeleteComponent
   ],
   imports: [

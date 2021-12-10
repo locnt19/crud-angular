@@ -9,17 +9,17 @@ import {
 } from '../../models/product.interface';
 
 @Component({
-  selector: 'app-product-dialog',
-  templateUrl: './product-dialog.component.html',
-  styleUrls: ['./product-dialog.component.scss']
+  selector: 'app-product-dialog-create-update',
+  templateUrl: './product-dialog-create-update.component.html',
+  styleUrls: ['./product-dialog-create-update.component.scss']
 })
-export class ProductDialogComponent implements OnInit, OnDestroy {
+export class ProductDialogCreateUpdateComponent implements OnInit, OnDestroy {
   productForm: FormGroup;
   isUpdateNoChange: boolean;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IProductDialog,
-    private dialogRef: MatDialogRef<ProductDialogComponent>,
+    private dialogRef: MatDialogRef<ProductDialogCreateUpdateComponent>,
     private _formBuilder: FormBuilder
   ) {
     this.productForm = this._initForm();

@@ -10,7 +10,7 @@ import {
 import { ProductCardService } from '../../services/product-card.service';
 import { ProductService } from '../../services/product.service';
 import { ProductDialogDeleteComponent } from '../product-dialog-delete/product-dialog-delete.component';
-import { ProductDialogComponent } from '../product-dialog/product-dialog.component';
+import { ProductDialogCreateUpdateComponent } from '../product-dialog-create-update/product-dialog-create-update.component';
 
 @Component({
   selector: 'app-product-card',
@@ -60,7 +60,7 @@ export class ProductCardComponent implements OnInit, OnDestroy {
   }
 
   private _openDialogUpdate(): void {
-    const dialogRef = this._matDialog.open(ProductDialogComponent, {
+    const dialogRef = this._matDialog.open(ProductDialogCreateUpdateComponent, {
       width: '500px',
       disableClose: true,
       data: {
