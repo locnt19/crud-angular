@@ -1,27 +1,54 @@
-# CrudAngular
+# CRUD ANGULAR
+
+A simple CRUD application built using Angular and Angular Material.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.2.3.
 
-## Development server
+## Prerequisites
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Both the CLI and generated project have dependencies that require Node 8.9 or higher, together with NPM 5.5.1 or higher.
 
-## Code scaffolding
+## Installation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+**BEFORE YOU INSTALL** please read the [prerequisites](#prerequisites)
 
-## Build
+Skip this step if you already have Angular CLI installed
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```hash
+npm install -g @angular/cli
+```
 
-## Running unit tests
+Install the dependencies and devDependencies:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```hash
+npm install
+```
 
-## Running end-to-end tests
+Start project:
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```hash
+npm start
+```
 
-## Further help
+Browser will open and navigate to http://localhost:4200/
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## Main features
+
+- Create
+- Read
+- Update
+- Delete
+- Search
+- Sort
+- Filter
+- Paginate
+
+## Tech Stack
+
+- [Angular]
+- [Angular Material]
+- [JSON Server]
+
+  [angular]: https://angular.io/
+  [angular material]: https://github.com/angular/components#readme
+  [json server]: https://github.com/typicode/json-server#readme
