@@ -5,7 +5,7 @@
       mat-flat-button
       color="primary"
       isRoundButton="true"
-      (click)="ctaAddProduct()"
+      (click)="callToAction('create')"
       class="ms-3"
     >
       <mat-icon>add</mat-icon>
@@ -13,6 +13,15 @@
   </div>
 
   <div class="main-content mt-3">
+    <button
+      mat-flat-button
+      color="primary"
+      isRoundButton="true"
+      (click)="callToAction('all_product')"
+    >
+      All product
+    </button>
+
     <form
       [formGroup]="productForm"
       class="d-flex align-items-center justify-content-between mt-3"

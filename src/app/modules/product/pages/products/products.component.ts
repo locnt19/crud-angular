@@ -24,7 +24,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private _subscription$: Subscription;
   private _paginator$: Subject<PageEvent>;
   private _debounceTime: number;
-  private _ctaAddProduct$: Subject<void>;
+  private _callToAction$: Subject<string>;
+  private _pendingListenFormControl: boolean;
   products: IProduct[];
   productForm: FormGroup;
   productCardActions: IProductCardAction[];
@@ -39,15 +40,13 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this._subscription$ = new Subscription();
     this._paginator$ = new Subject();
     this._debounceTime = 300;
-    this._ctaAddProduct$ = new Subject();
-    this.productCardActions = this._setProductCTA();
+    this._callToAction$ = new Subject();
+    this.productCardActions = this._setProductCardActions();
     this.productForm = this._initForm();
-    this.repositoryOption = {
-      _page: environment.paginate.page,
-      _limit: environment.paginate.limit
-    };
+    this._pendingListenFormControl = false;
+    this.repositoryOption = this._setRepositoryOptionDefault();
     this._listenPaginatorChange();
-    this._listenCtaAddProduct();
+    this._listenCallToAction();
     this._listenFormControlCreatedAtChange();
     this._listenFormControlStatusChange();
     this._listenFormControlSearchChange();
@@ -69,7 +68,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
     });
   }
 
-  private _setProductCTA(): IProductCardAction[] {
+  private _setRepositoryOptionDefault(): IProductRepositoryOption {
+    return {
+      _page: environment.paginate.page,
+      _limit: environment.paginate.limit
+    };
+  }
+
+  private _setProductCardActions(): IProductCardAction[] {
     const cta = [
       {
         label: 'View',
@@ -93,6 +99,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
       this._productService.getProducts(option).subscribe(res => {
         this.totalProductCount = res.total;
         this.products = res.data;
+        this._pendingListenFormControl = false;
       })
     );
   }
@@ -114,7 +121,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this._getProducts(option);
   }
 
-  private _openDialog(): void {
+  private _openCreateDialog(): void {
     const dialogRef = this._matDialog.open(ProductDialogComponent, {
       width: '500px',
       disableClose: true,
@@ -146,11 +153,23 @@ export class ProductsComponent implements OnInit, OnDestroy {
     );
   }
 
-  private _listenCtaAddProduct(): void {
+  private _listenCallToAction(): void {
     this._subscription$.add(
-      this._ctaAddProduct$
+      this._callToAction$
         .pipe(debounceTime(this._debounceTime))
-        .subscribe(() => this._openDialog())
+        .subscribe(action => {
+          if (action === 'create') {
+            this._openCreateDialog();
+            return;
+          }
+
+          if (action === 'all_product') {
+            this.productForm.reset();
+            this._pendingListenFormControl = true;
+            this.repositoryOption = this._setRepositoryOptionDefault();
+            this._resetAndGetProducts(this.repositoryOption);
+          }
+        })
     );
   }
 
@@ -160,6 +179,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
         .get('createdAt')
         .valueChanges.pipe(debounceTime(this._debounceTime))
         .subscribe((value: string) => {
+          if (this._pendingListenFormControl) {
+            return;
+          }
           this.repositoryOption._sort = 'createdAt';
           this.repositoryOption._order = value;
           this._resetAndGetProducts(this.repositoryOption);
@@ -173,6 +195,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
         .get('status')
         .valueChanges.pipe(debounceTime(this._debounceTime))
         .subscribe((value?: TProductStatus) => {
+          if (this._pendingListenFormControl) {
+            return;
+          }
           this.repositoryOption.status = value;
           this._resetAndGetProducts(this.repositoryOption);
         })
@@ -185,8 +210,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
         .get('search')
         .valueChanges.pipe(debounceTime(this._debounceTime))
         .subscribe((value: string) => {
+          if (this._pendingListenFormControl) {
+            return;
+          }
           if (!value.trim()) return;
-
           this.repositoryOption.q = value;
           this._resetAndGetProducts(this.repositoryOption);
         })
@@ -197,7 +224,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this._paginator$.next(event);
   }
 
-  ctaAddProduct(): void {
-    this._ctaAddProduct$.next();
+  callToAction(action: string): void {
+    this._callToAction$.next(action);
   }
 }
