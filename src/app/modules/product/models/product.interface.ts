@@ -28,12 +28,12 @@ export interface IProductDialog {
   title: string;
   action: EProductActions;
   actionLabel: string;
+  product?: IProduct;
 }
 
 export enum EProductActions {
   create,
-  update,
-  delete
+  update
 }
 
 export enum ECardCTA {

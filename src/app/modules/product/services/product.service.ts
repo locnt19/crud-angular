@@ -89,6 +89,24 @@ export class ProductService {
     );
   }
 
+  updateProduct(product: IProduct): Observable<IProduct> {
+    this._loadingService.setLoading(true);
+
+    return this._http
+      .patch<IProduct>(
+        this._endpoint.product.replace('{product_id}', product.id.toString()),
+        product
+      )
+      .pipe(
+        catchError(() => this._catchError()),
+        delay(1500),
+        tap(() => {
+          this._loadingService.setLoading(false);
+          this._notificationService.showSuccess('Update product successful');
+        })
+      );
+  }
+
   deleteProduct(id: string): Observable<IProduct> {
     this._loadingService.setLoading(true);
 

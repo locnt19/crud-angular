@@ -4,12 +4,14 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import {
   ECardCTA,
+  EProductActions,
   IProduct,
   IProductCTA
 } from '../../models/product.interface';
 import { ProductCardService } from '../../services/product-card.service';
 import { ProductService } from '../../services/product.service';
 import { ProductDialogDeleteComponent } from '../product-dialog-delete/product-dialog-delete.component';
+import { ProductDialogComponent } from '../product-dialog/product-dialog.component';
 
 @Component({
   selector: 'app-product-card',
@@ -47,7 +49,7 @@ export class ProductCardComponent implements OnInit, OnDestroy {
         .pipe(debounceTime(this._debounceTime))
         .subscribe(action => {
           if (action === ECardCTA.update) {
-            // TODO: Open Update dialog
+            this._openDialogUpdate();
             return;
           }
 
@@ -56,6 +58,27 @@ export class ProductCardComponent implements OnInit, OnDestroy {
             return;
           }
         })
+    );
+  }
+
+  private _openDialogUpdate(): void {
+    const dialogRef = this._matDialog.open(ProductDialogComponent, {
+      width: '500px',
+      disableClose: true,
+      data: {
+        title: 'Update product',
+        action: EProductActions.update,
+        actionLabel: 'Update',
+        product: this.product
+      }
+    });
+
+    this._subscription$.add(
+      dialogRef.afterClosed().subscribe((data?: IProduct) => {
+        if (data) {
+          this._updateProduct(data);
+        }
+      })
     );
   }
 
@@ -69,6 +92,14 @@ export class ProductCardComponent implements OnInit, OnDestroy {
         if (data) {
           this._deleteProduct(this.product.id.toString());
         }
+      })
+    );
+  }
+
+  private _updateProduct(product: IProduct): void {
+    this._subscription$.add(
+      this._productService.updateProduct(product).subscribe(res => {
+        this.product = res;
       })
     );
   }

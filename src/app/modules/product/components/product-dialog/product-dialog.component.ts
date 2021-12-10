@@ -1,8 +1,10 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as _ from 'lodash';
 import {
   EProductActions,
+  IProduct,
   IProductDialog
 } from '../../models/product.interface';
 
@@ -13,6 +15,7 @@ import {
 })
 export class ProductDialogComponent implements OnInit, OnDestroy {
   productForm: FormGroup;
+  isUpdateNoChange: boolean;
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: IProductDialog,
@@ -20,6 +23,9 @@ export class ProductDialogComponent implements OnInit, OnDestroy {
     private _formBuilder: FormBuilder
   ) {
     this.productForm = this._initForm();
+    this.isUpdateNoChange = false; // default for create case
+    this._patchValueToFormIfActionUpdate();
+    this._listenFormChangeIfActionUpdate();
   }
 
   ngOnInit(): void {}
@@ -41,12 +47,36 @@ export class ProductDialogComponent implements OnInit, OnDestroy {
       ],
       quantity: ['', Validators.required],
       status: ['AVAILABLE'],
-      createdAt: [this._isCreateAction() ? today.toISOString() : '']
+      createdAt: [this._isActionCreate() ? today.toISOString() : '']
     });
   }
 
-  private _isCreateAction(): boolean {
+  private _patchValueToFormIfActionUpdate() {
+    if (this._isActionUpdate()) {
+      this.isUpdateNoChange = true;
+      this.productForm.patchValue(this.data.product);
+    }
+  }
+
+  private _isActionCreate(): boolean {
     return this.data.action === EProductActions.create;
+  }
+
+  private _isActionUpdate(): boolean {
+    return this.data.product && this.data.action === EProductActions.update;
+  }
+
+  private _listenFormChangeIfActionUpdate() {
+    if (this._isActionUpdate()) {
+      this.productForm.valueChanges.subscribe((form: IProduct) => {
+        if (_.isEqual(this.data.product, form)) {
+          this.isUpdateNoChange = true;
+          return;
+        }
+
+        this.isUpdateNoChange = false;
+      });
+    }
   }
 
   save(): void {

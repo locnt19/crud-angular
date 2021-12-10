@@ -5,22 +5,27 @@
     <mat-label>Name</mat-label>
     <input matInput formControlName="name" />
   </mat-form-field>
+
   <mat-form-field class="w-100" appearance="fill">
     <mat-label>Description</mat-label>
-    <textarea matInput formControlName="description"></textarea>
+    <textarea matInput formControlName="description" rows="3"></textarea>
   </mat-form-field>
+
   <mat-form-field class="w-100" appearance="fill">
     <mat-label>Price</mat-label>
     <input matInput formControlName="price" />
   </mat-form-field>
+
   <mat-form-field class="w-100" appearance="fill">
     <mat-label>Image</mat-label>
     <input matInput formControlName="imageUrl" />
   </mat-form-field>
+
   <mat-form-field class="w-100" appearance="fill">
     <mat-label>Quantity</mat-label>
-    <input matInput formControlName="quantity" />
+    <input matInput formControlName="quantity" type="number" />
   </mat-form-field>
+
   <mat-form-field class="w-100" appearance="fill">
     <mat-label>Status</mat-label>
     <mat-select formControlName="status">
@@ -29,11 +34,12 @@
     </mat-select>
   </mat-form-field>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <button mat-button mat-dialog-close>Cancel</button>
   <button
     color="primary"
-    [disabled]="!productForm.valid"
+    [disabled]="!productForm.valid || isUpdateNoChange"
     (click)="save()"
     mat-raised-button
   >
