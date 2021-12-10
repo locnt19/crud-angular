@@ -1,6 +1,7 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import * as _ from 'lodash';
 import {
   EProductAction,
@@ -14,6 +15,7 @@ import {
   styleUrls: ['./product-dialog-create-update.component.scss']
 })
 export class ProductDialogCreateUpdateComponent implements OnInit, OnDestroy {
+  private _subscription$: Subscription;
   productForm: FormGroup;
   isUpdateNoChange: boolean;
 
@@ -22,6 +24,7 @@ export class ProductDialogCreateUpdateComponent implements OnInit, OnDestroy {
     private dialogRef: MatDialogRef<ProductDialogCreateUpdateComponent>,
     private _formBuilder: FormBuilder
   ) {
+    this._subscription$ = new Subscription();
     this.productForm = this._initForm();
     this.isUpdateNoChange = false; // default for create case
     this._patchValueToFormIfActionUpdate();
@@ -30,7 +33,9 @@ export class ProductDialogCreateUpdateComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {}
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this._subscription$.unsubscribe();
+  }
 
   private _initForm(): FormGroup {
     const timeElapsed = Date.now();
@@ -68,14 +73,15 @@ export class ProductDialogCreateUpdateComponent implements OnInit, OnDestroy {
 
   private _listenFormChangeIfActionUpdate() {
     if (this._isActionUpdate()) {
-      this.productForm.valueChanges.subscribe((form: IProduct) => {
-        if (_.isEqual(this.data.product, form)) {
-          this.isUpdateNoChange = true;
-          return;
-        }
-
-        this.isUpdateNoChange = false;
-      });
+      this._subscription$.add(
+        this.productForm.valueChanges.subscribe((form: IProduct) => {
+          if (_.isEqual(this.data.product, form)) {
+            this.isUpdateNoChange = true;
+            return;
+          }
+          this.isUpdateNoChange = false;
+        })
+      );
     }
   }
 
